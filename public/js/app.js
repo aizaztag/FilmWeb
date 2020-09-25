@@ -3136,25 +3136,29 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    /*create new film */
     addFilm: function addFilm() {
       var _this = this;
 
       this.axios.post('http://localhost:8000/api/film/add', this.film).then(function (response) {
         return _this.$router.push({
           name: 'home'
-        }) // console.log(response.data)
-        ;
+        });
       })["catch"](function (error) {
         return console.log(error);
       })["finally"](function () {
         return _this.loading = false;
       });
     },
+
+    /*photo upload on change event*/
     onFileChange: function onFileChange(e) {
       var files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
       this.createImage(files[0]);
     },
+
+    /*save photo for form submission*/
     createImage: function createImage(file) {
       var image = new Image();
       var reader = new FileReader();
@@ -3219,6 +3223,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3228,11 +3233,13 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
+    /*load all films*/
     this.axios.get('http://localhost:8000/api/films').then(function (response) {
       _this.films = response.data;
     });
   },
   methods: {
+    /*delete all films*/
     deleteFilm: function deleteFilm(id) {
       var _this2 = this;
 
@@ -3280,6 +3287,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3292,7 +3300,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    /*user login*/
     login: function login() {
+      /*get last referral url to redirect to same page after login*/
       var url = localStorage.getItem("slug");
       var app = this;
       this.$auth.login({
@@ -3311,8 +3321,7 @@ __webpack_require__.r(__webpack_exports__);
         rememberMe: true,
         redirect: '/film/' + url,
         fetchUser: true
-      }).then(function (resp) {//console.log(resp.data);
-      })["catch"](function (error) {
+      }).then(function (resp) {})["catch"](function (error) {
         app.error = true;
         console.log('error 22', error);
       });
@@ -3360,6 +3369,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -3368,13 +3379,12 @@ __webpack_require__.r(__webpack_exports__);
       password: '',
       error: false,
       errors: {},
-      success: false,
-      url: ''
+      success: false
     };
   },
   methods: {
+    /*register user here*/
     register: function register() {
-      var url = localStorage.getItem("slug");
       var app = this;
       this.$auth.register({
         data: {
@@ -3385,13 +3395,14 @@ __webpack_require__.r(__webpack_exports__);
         success: function success(data) {
           console.log('data', data);
           app.success = true;
-          app.url = data.url;
         },
         error: function error(resp) {
           app.error = true;
           app.errors = resp.response.data.errors;
         },
         redirect: '/login'
+        /*then redirect to login */
+
       }).then(function (resp) {
         console.log(resp.data);
       })["catch"](function (error) {
@@ -3454,6 +3465,7 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       films: [],
+      comments: [],
       isLoggedIN: false,
       comment: '',
       slug: ''
@@ -3462,38 +3474,46 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     var _this = this;
 
-    var slug = this.$route.params.slug;
+    var slug = this.$route.params.slug; // set slug to redirect on same page
+
     localStorage.setItem("slug", slug);
+    /*loads film model on page load*/
+
     this.axios.get("http://localhost:8000/api/film/edit/".concat(slug)).then(function (response) {
       _this.films = response.data.item;
       _this.isLoggedIN = response.data.login;
       console.log('response.data', response.data);
-    }); //console.log('this.films' , this.films)
+    });
+    /*load user comments on related to movie*/
+
+    this.axios.post("http://localhost:8000/api/comment/index", {
+      slug: slug
+    }).then(function (response) {
+      _this.comments = response.data;
+    });
   },
   methods: {
     addComment: function addComment() {
       var _this2 = this;
 
-      this.axios.post('http://localhost:8000/api/film/comment', {
+      /*create comment*/
+      this.axios.post('http://localhost:8000/api/comment/store', {
         comment: this.comment,
         slug: this.$route.params.slug
       }).then(function (response) {
-        return _this2.$router.push({
-          name: 'home'
-        }) // console.log(response.data)
-        ;
+        return (//this.$router.push({name: 'home'})
+          _this2.comments = response.data, _this2.comment = '', console.log('this.comments ', _this2.comments)
+        );
       })["catch"](function (error) {
         return console.log(error);
       })["finally"](function () {
         return _this2.loading = false;
       });
     },
-    greet: function greet() {
-      this.axios.get("http://localhost:8000/login").then(function (response) {});
-    },
     deleteFilm: function deleteFilm(id) {
       var _this3 = this;
 
+      /*delete */
       this.axios["delete"]("http://localhost:8000/api/film/delete/".concat(id)).then(function (response) {
         var i = _this3.films.map(function (item) {
           return item.id;
@@ -39131,40 +39151,7 @@ var render = function() {
                     attrs: { to: "/films/create" }
                   },
                   [_vm._v("Add Film")]
-                ),
-                _vm._v(" "),
-                !_vm.$auth.check()
-                  ? _c(
-                      "div",
-                      { staticClass: "nav-item nav-link" },
-                      [
-                        _c(
-                          "router-link",
-                          { attrs: { to: { name: "register" } } },
-                          [_vm._v("Register\n                    ")]
-                        )
-                      ],
-                      1
-                    )
-                  : _vm._e(),
-                _vm._v(" "),
-                _vm.$auth.check()
-                  ? _c("li", { staticClass: "nav-item nav-link" }, [
-                      _c(
-                        "a",
-                        {
-                          attrs: { href: "#" },
-                          on: {
-                            click: function($event) {
-                              $event.preventDefault()
-                              return _vm.$auth.logout()
-                            }
-                          }
-                        },
-                        [_vm._v("Logout")]
-                      )
-                    ])
-                  : _vm._e()
+                )
               ],
               1
             )
@@ -39527,7 +39514,11 @@ var render = function() {
             _vm._v(" "),
             _c("td", [_vm._v(_vm._s(film.rating))]),
             _vm._v(" "),
-            _c("td", [_c("img", { attrs: { src: film.photo } })]),
+            _c("td", [
+              _c("img", {
+                attrs: { src: film.photo, width: "100", height: "120" }
+              })
+            ]),
             _vm._v(" "),
             _c("td", [
               _c(
@@ -39684,7 +39675,7 @@ var render = function() {
         _vm._v(" "),
         _c(
           "button",
-          { staticClass: "btn btn-default", attrs: { type: "submit" } },
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
           [_vm._v("Sign in")]
         )
       ]
@@ -39714,6 +39705,8 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c("h3", [_vm._v("Register User")]),
+    _vm._v(" "),
     _vm.error && !_vm.success
       ? _c("div", { staticClass: "alert alert-danger" }, [
           _c("p", [
@@ -39876,7 +39869,7 @@ var render = function() {
             _vm._v(" "),
             _c(
               "button",
-              { staticClass: "btn btn-default", attrs: { type: "submit" } },
+              { staticClass: "btn btn-primary", attrs: { type: "submit" } },
               [_vm._v("Submit")]
             )
           ]
@@ -39910,7 +39903,7 @@ var render = function() {
     _c("h3", { staticClass: "text-center" }, [_vm._v("Film Detail")]),
     _c("br"),
     _vm._v(" "),
-    _c("img", { attrs: { src: _vm.films.photo } }),
+    _c("img", { attrs: { width: "100", height: "120", src: _vm.films.photo } }),
     _vm._v(" "),
     _c("h3", [_vm._v(" Movie : " + _vm._s(_vm.films.name))]),
     _vm._v(" "),
@@ -39919,6 +39912,19 @@ var render = function() {
     _c("h3", [_vm._v(" Rating : " + _vm._s(_vm.films.rating))]),
     _vm._v(" "),
     _c("h3", [_vm._v(" Release Date : " + _vm._s(_vm.films.release_date))]),
+    _vm._v(" "),
+    _c("h5", [_vm._v("User Reviews")]),
+    _vm._v(" "),
+    _c(
+      "ul",
+      { attrs: { id: "example-1" } },
+      _vm._l(_vm.comments, function(item) {
+        return _c("li", { key: item.message }, [
+          _vm._v("\n            " + _vm._s(item.comment) + "\n        ")
+        ])
+      }),
+      0
+    ),
     _vm._v(" "),
     !_vm.$auth.check()
       ? _c(
@@ -55323,6 +55329,10 @@ Vue.use(vue_axios__WEBPACK_IMPORTED_MODULE_2___default.a, axios__WEBPACK_IMPORTE
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: 'history',
   routes: [{
+    name: 'home',
+    path: '/',
+    component: _components_AllFilms_vue__WEBPACK_IMPORTED_MODULE_5__["default"]
+  }, {
     name: 'home',
     path: '/home',
     component: _components_AllFilms_vue__WEBPACK_IMPORTED_MODULE_5__["default"]

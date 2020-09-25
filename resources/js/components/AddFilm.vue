@@ -56,28 +56,28 @@
             }
         },
         methods: {
+            /*create new film */
             addFilm() {
                 this.axios
                     .post('http://localhost:8000/api/film/add', this.film)
                     .then(response => (
                         this.$router.push({name: 'home'})
-                        // console.log(response.data)
                     ))
                     .catch(error => console.log(error))
                     .finally(() => this.loading = false)
             },
-
+            /*photo upload on change event*/
             onFileChange(e) {
                 var files = e.target.files || e.dataTransfer.files;
                 if (!files.length)
                     return;
                 this.createImage(files[0]);
             },
+            /*save photo for form submission*/
             createImage(file) {
                 var image = new Image();
                 var reader = new FileReader();
                 var vm = this;
-
                 reader.onload = (e) => {
                     vm.film.image = e.target.result;
                 };

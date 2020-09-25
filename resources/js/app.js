@@ -28,6 +28,11 @@ const router = new VueRouter({
     routes: [
         {
             name: 'home',
+            path: '/',
+            component: AllFilms
+        },
+        {
+            name: 'home',
             path: '/home',
             component: AllFilms
         },

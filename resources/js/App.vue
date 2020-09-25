@@ -6,16 +6,10 @@
         </div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="collapse navbar-collapse">
+                <!--Routes-->
                 <div class="navbar-nav">
                     <router-link to="/home" class="nav-item nav-link">Home</router-link>
                     <router-link to="/films/create" class="nav-item nav-link">Add Film</router-link>
-                    <div v-if="!$auth.check()" class="nav-item nav-link">
-                        <router-link :to="{ name: 'register' }">Register
-                        </router-link>
-                    </div>
-                    <li v-if="$auth.check()" class="nav-item nav-link">
-                        <a href="#" @click.prevent="$auth.logout()">Logout</a>
-                    </li>
                 </div>
             </div>
         </nav>

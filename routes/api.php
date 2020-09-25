@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-
+/*FILM*/
 Route::get('films', 'FilmController@index');
 Route::group(['prefix' => 'film'], function () {
     Route::post('add', 'FilmController@add');
@@ -26,12 +26,17 @@ Route::group(['prefix' => 'film'], function () {
     Route::post('update/{id}', 'FilmController@update');
     Route::delete('delete/{id}', 'FilmController@delete');
 
-    Route::post('comment', 'FilmController@comment');
+
+});
+/*COMMENT*/
+Route::group(['prefix' => 'comment'], function () {
+    Route::post('index', 'CommentController@index');
+    Route::post('store', 'CommentController@store');
 
 });
 
-
 Route::post('auth/login', 'AuthController@login');
+/*JWT API authentication */
 Route::group(['middleware' => 'jwt.verify'], function(){
     Route::get('auth/user', 'AuthController@user');
 });

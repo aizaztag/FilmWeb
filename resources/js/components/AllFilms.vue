@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3 class="text-center">All Films</h3><br/>
-
+         <!--film grid get all films on page-->
         <table class="table table-bordered">
             <thead>
             <tr>
@@ -15,13 +15,14 @@
             </tr>
             </thead>
             <tbody>
+            <!--loop through the film array-->
             <tr v-for="film in films" :key="film.id">
                 <td>{{ film.id }}</td>
                 <td>{{ film.name }}</td>
                 <td>{{ film.description }}</td>
                 <td>{{ film.release_date }}</td>
                 <td>{{ film.rating }}</td>
-                <td>  <img v-bind:src="film.photo" /></td>
+                <td>  <img v-bind:src="film.photo" width="100" height="120"/></td>
                 <td>
                     <div class="btn-group" role="group">
                         <router-link :to="{name: 'show', params: { slug: film.slug }}" class="btn btn-primary">Detail
@@ -42,6 +43,7 @@
             }
         },
         created() {
+            /*load all films*/
             this.axios
                 .get('http://localhost:8000/api/films')
                 .then(response => {
@@ -49,6 +51,7 @@
                 });
         },
         methods: {
+            /*delete all films*/
             deleteFilm(id) {
                 this.axios
                     .delete(`http://localhost:8000/api/film/delete/${id}`)

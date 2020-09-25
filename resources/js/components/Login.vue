@@ -4,6 +4,7 @@
         <div class="alert alert-danger" v-if="error">
             <p>There was an error, unable to sign in with those credentials.</p>
         </div>
+        <!--USER LOGIN-->
         <form autocomplete="off" @submit.prevent="login" method="post">
             <div class="form-group">
                 <label for="email">E-mail</label>
@@ -13,7 +14,7 @@
                 <label for="password">Password</label>
                 <input type="password" id="password" class="form-control" v-model="password" required>
             </div>
-            <button type="submit" class="btn btn-default">Sign in</button>
+            <button type="submit" class="btn btn-primary">Sign in</button>
         </form>
     </div>
 </template>
@@ -32,9 +33,10 @@
             }
         },
         methods: {
+            /*user login*/
             login(){
+                /*get last referral url to redirect to same page after login*/
                 let url = localStorage.getItem("slug");
-
                 var app = this
                 this.$auth.login({
                     data: {
@@ -45,7 +47,6 @@
                         app.success = true;
                         app.response= data;
                         console.log('app.response' , app.response)
-
                     },
                     error: function(e) {
                         console.log(e);
@@ -54,7 +55,6 @@
                     redirect: '/film/'+url,
                     fetchUser: true,
                 }).then(resp=>{
-                    //console.log(resp.data);
                 }).catch(error=>{
                     app.error = true
                     console.log('error 22' , error);
