@@ -18,6 +18,8 @@ class Film extends Model
     public function setSlugAttribute($value)
     {
         $this->attributes['name'] = $value;
-        $this->attributes['slug'] = str_slug($value);
+        $this->attributes['slug'] = str_slug($value).(rand(10,1000));
+;
+
     }
 }
