@@ -37,7 +37,7 @@
                     </div>
                     <div class="form-group">
                         <label>Photo</label>
-                        <input required="required" accept="image/*" type="file" @change="onFileChange">
+                        <input required="required" accept="image/*" id="photo" type="file" @change="onFileChange">
                     </div>
                     <button type="submit" class="btn btn-primary">Add Film</button>
                 </form>
@@ -76,13 +76,19 @@
             /*save photo for form submission*/
             createImage(file) {
                 var image = new Image();
+                //var size= image.files;
                 var reader = new FileReader();
                 var vm = this;
+                var MAX_SIZE =5000;
                 reader.onload = (e) => {
                     vm.film.image = e.target.result;
+                    console.log('vm.film.image.size' , file.size)
                 };
                 reader.readAsDataURL(file);
             },
+
+            
+            
             removeImage: function (e) {
                 this.film.image = '';
             }

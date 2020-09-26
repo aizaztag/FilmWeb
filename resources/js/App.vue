@@ -10,6 +10,9 @@
                 <div class="navbar-nav">
                     <router-link to="/home" class="nav-item nav-link">Home</router-link>
                     <router-link to="/films/create" class="nav-item nav-link">Add Film</router-link>
+                    <li v-if="$auth.check()" class="pull-right">
+                        <a href="#" @click.prevent="$auth.logout()">Logout</a>
+                    </li>
                 </div>
             </div>
         </nav>

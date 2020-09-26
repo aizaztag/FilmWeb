@@ -3160,12 +3160,15 @@ __webpack_require__.r(__webpack_exports__);
 
     /*save photo for form submission*/
     createImage: function createImage(file) {
-      var image = new Image();
+      var image = new Image(); //var size= image.files;
+
       var reader = new FileReader();
       var vm = this;
+      var MAX_SIZE = 5000;
 
       reader.onload = function (e) {
         vm.film.image = e.target.result;
+        console.log('vm.film.image.size', file.size);
       };
 
       reader.readAsDataURL(file);
@@ -39151,7 +39154,25 @@ var render = function() {
                     attrs: { to: "/films/create" }
                   },
                   [_vm._v("Add Film")]
-                )
+                ),
+                _vm._v(" "),
+                _vm.$auth.check()
+                  ? _c("li", { staticClass: "pull-right" }, [
+                      _c(
+                        "a",
+                        {
+                          attrs: { href: "#" },
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.$auth.logout()
+                            }
+                          }
+                        },
+                        [_vm._v("Logout")]
+                      )
+                    ])
+                  : _vm._e()
               ],
               1
             )
@@ -39454,6 +39475,7 @@ var render = function() {
                 attrs: {
                   required: "required",
                   accept: "image/*",
+                  id: "photo",
                   type: "file"
                 },
                 on: { change: _vm.onFileChange }

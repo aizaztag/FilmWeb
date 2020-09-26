@@ -56,7 +56,7 @@ class FilmController extends Controller
         {
             $data['login'] = true; //user is logged-in
         }
-        echo  json_encode($data);
+        return array_reverse($data);
     }
 
     /**
